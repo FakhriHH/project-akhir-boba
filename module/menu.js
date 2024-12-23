@@ -1,30 +1,36 @@
-app.get('/menu', function (req, res) {
-    connection.query('SELECT * FROM menu', function (error, results, fields) {
-        res.json(results)
-    });
+app.get('/menu', async (req, res) => {
+    const results = await knex('menu').select();
+    res.json(results);
 });
 
-app.post('/menu', (req, res) => {
-  const data = req.body
+app.post('/menu', async (req, res) => {
+    const data = req.body
 
-  connection.query(`INSERT INTO menu (name, description, price, stock) VALUES ('${data.name}', '${data.description}', '${data.price}', '${data.stock}')`, (error, results, fields) => {
+    const results = await knex('menu').insert({
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        stock: data.stock,
+    })
     res.json(results)
-  });
 });
 
-app.delete("/menu/:id", (req, res) => {
-  const primaryKey = req.params.id
+app.delete("/menu/:id", async (req, res) => {
+    const primaryKey = req.params.id
+    
+    const results = await knex("menu").where("id", primaryKey).del();
+    res.json(results)
+});
   
-  connection.query(`DELETE FROM menu WHERE id = '${primaryKey}'`, (error, results, fields) => {
+app.put("/menu/:id", async (req, res) => {
+    const primaryKey = req.params.id
+    const data = req.body
+    
+    const results = await knex("menu").where("id", primaryKey).update({
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        stock: data.stock,
+    });
     res.json(results)
-  });
 });
-
-app.put("/menu/:id", (req, res) => {
-  const primaryKey = req.params.id
-  const data = req.body
-
-  connection.query(`UPDATE menu SET name = '${data.name}', description = '${data.description}', price = '${data.price}', stock = '${data.stock}' where id = '${primaryKey}'`, (error, results, fields) => {
-    res.json(results)
-  });
-})
