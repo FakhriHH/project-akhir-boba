@@ -12,6 +12,7 @@ app.post('/menu', async (req, res) => {
         price: data.price,
         stock: data.stock,
     })
+    
     res.json(results)
 });
 

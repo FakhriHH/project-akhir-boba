@@ -16,6 +16,7 @@ global.knex = require('knex')({
 app.use(cors());
 app.use(express.json());
 
-require("./module/menu.js")
+require("./module/menu")
+require("./module/transactions")
 
 app.listen(3000)
